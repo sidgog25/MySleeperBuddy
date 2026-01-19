@@ -1,0 +1,29 @@
+[project]
+name = "MySleeperBuddy"
+version = "0.1.0"
+description = "An AI agent that will serve as your primary assistant for the fantasy season."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "langchain-core>=0.3.55",
+    "langchain-openai>=0.3.14",
+    "langgraph>=0.2.76",
+    "pandas>=2.2.3",
+    "plotly>=6.0.1",
+    "psycopg2-binary>=2.9.10",
+    "pydantic>=2.11.3",
+    "python-dotenv>=1.1.0",
+    "sqlalchemy>=2.0.40",
+    "tabulate>=0.9.0",
+]
+
+[tool.setuptools]
+packages = ["buddy"]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "langgraph-api>=0.2.18",
+    "langgraph-cli>=0.2.6",
+    "nbformat>=5.10.4",
+]

@@ -1,0 +1,21 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# env
+.env
+.env.local
+.env.production
+
+# visualizations produced by agent
+/frontend/output/*
+
+# macOS
+.DS_Store
