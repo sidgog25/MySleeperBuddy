@@ -15,6 +15,8 @@ sys.path.insert(0, str(project_root))
 from data.extract_sleeper_data import main as extract_data
 
 LANGGRAPH_SERVER_URL = os.getenv("LANGGRAPH_SERVER_URL")
+SUPABASE_KEY=os.getenv("SUPABASE_KEY", None)
+SUPABASE_URL=os.getenv("SUPABASE_API_URL", None)
 
 def _load_base_system_prompt() -> str:
     """
