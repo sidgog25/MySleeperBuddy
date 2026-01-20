@@ -15,8 +15,28 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(message)s",
 )
 
-SUPABASE_KEY=os.getenv("SUPABASE_KEY", None)
-SUPABASE_URL=os.getenv("SUPABASE_API_URL", None)
+def get_supabase_credentials():
+    """
+    Get Supabase credentials from environment variables or Streamlit secrets.
+    Streamlit Cloud stores secrets in st.secrets, not environment variables.
+    """
+    # First try environment variables (works locally with .env file)
+    supabase_key = os.getenv("SUPABASE_KEY")
+    supabase_url = os.getenv("SUPABASE_API_URL")
+
+    # If not found, try Streamlit secrets (for Streamlit Cloud deployment)
+    if not supabase_key or not supabase_url:
+        try:
+            import streamlit as st
+            supabase_key = supabase_key or st.secrets.get("SUPABASE_KEY")
+            supabase_url = supabase_url or st.secrets.get("SUPABASE_API_URL")
+        except (ImportError, AttributeError, KeyError):
+            # Not running in Streamlit or secrets not configured
+            pass
+
+    return supabase_key, supabase_url
+
+SUPABASE_KEY, SUPABASE_URL = get_supabase_credentials()
 
 
 
