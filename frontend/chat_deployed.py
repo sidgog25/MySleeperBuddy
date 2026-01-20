@@ -143,7 +143,6 @@ async def main():
         response = await create_thread(user_id="sid")
         thread_id = response["thread_id"]
 
-        current_chart = None
 
         # Stream responses
         while True:
@@ -156,19 +155,6 @@ async def main():
             print(f"---- Assistant ---- \n")
             # Get the response using our simplified get_stream function
             result = await get_stream(thread_id, user_input)
-
-            # check state after run
-            thread_state = await get_thread_state(thread_id)
-
-            if "chart_json" in thread_state["values"]:
-                chart_json = thread_state["values"]["chart_json"]
-                # render any new charts generated
-                if chart_json and chart_json != current_chart:
-                    import plotly.io as pio
-                    fig = pio.from_json(chart_json)
-                    fig.show()
-
-                    current_chart = chart_json
             print("")
 
     except Exception as e:

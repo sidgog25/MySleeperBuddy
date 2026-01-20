@@ -20,9 +20,22 @@ SUPABASE_URL=os.getenv("SUPABASE_API_URL", None)
 
 
 
-def main() -> None:
+def main(username: str = None, league_id: str = None) -> None:
+    """
+    Main function to extract and upsert Sleeper data.
+    
+    Args:
+        username: Sleeper username (optional, for future use)
+        league_id: Sleeper League ID (required)
+    """
     url = "https://api.sleeper.app/v1/"
-    league_id = input("Enter Sleeper League ID: ")
+    
+    # If parameters not provided, prompt for them (backward compatibility)
+    if league_id is None:
+        league_id = input("Enter Sleeper League ID: ")
+    if username is None:
+        username = input("Enter Sleeper Username (optional): ")
+    
     get_league_information(url=url, league_id=league_id)
     get_players(url=url)
     get_state(url=url)
