@@ -36,7 +36,7 @@ def _build_user_context_system_prompt(username: str | None, league_id: str | Non
     league_id_str = (league_id or "").strip() or "unknown"
     return (
         "Context for this conversation:\n"
-        f"- User: {username_str}\n"
+        f"- Display Name: {username_str}\n"
         f"- Sleeper league_id: {league_id_str}\n\n"
         "You should tailor answers, SQL queries, and analysis to this league_id's data in the database "
         "and communicate as if you are assisting this specific user."
