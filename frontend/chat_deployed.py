@@ -108,7 +108,7 @@ async def get_stream(thread_id: str, message: str):
                     "POST",
                     url=f"{LANGGRAPH_SERVER_URL}/threads/{thread_id}/runs/stream",
                     json={
-                        "assistant_id": "scout",
+                        "assistant_id": "buddy",
                         "input": {
                             "messages": [
                                 {"role": "human", "content": message}
@@ -140,7 +140,7 @@ async def get_stream(thread_id: str, message: str):
 async def main():
     try:
         # Create a thread
-        response = await create_thread(user_id="kenny")
+        response = await create_thread(user_id="sid")
         thread_id = response["thread_id"]
 
         current_chart = None
@@ -182,6 +182,6 @@ if __name__ == "__main__":
 
     nest_asyncio.apply()
 
-    print(f"\nGreetings!\n\nTry asking Scout to show you a preview of the data.\n\n{40 * "="}\n\n")
+    print(f"\nGreetings!\n\nTry asking Buddy to show you a preview of the data.\n\n{40 * "="}\n\n")
 
     asyncio.run(main())
