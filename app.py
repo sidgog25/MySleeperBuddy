@@ -60,12 +60,7 @@ def _lg_process_line(line: str, current_event: str) -> str | None:
 
         tool_call_chunks = message_chunk.get("tool_call_chunks") or []
         if tool_call_chunks:
-            tool_chunk = tool_call_chunks[0] or {}
-            tool_name = tool_chunk.get("name", "")
-            args = tool_chunk.get("args", "")
-            if tool_name:
-                return f"\n\n< TOOL CALL: {tool_name} >\n\n" + (args or "")
-            return args or ""
+            return None
 
         return message_chunk.get("content", "")
     return None
@@ -222,11 +217,11 @@ st.markdown("""
         border-radius: 14px;
         padding: 0.25rem 0.25rem;
     }
-    div[data-testid="stChatMessage"] a { color: var(--sleeper-accent) !important; }
+    div[data-testid="stChatMessage"] a { color: var(--sleeper-text) !important; }
     div[data-testid="stChatMessage"] code {
         background: rgba(24, 35, 58, 0.9);
         border: 1px solid var(--sleeper-border);
-        color: var(--sleeper-text);
+        color: var(--sleeper-accent);
         border-radius: 8px;
         padding: 0.1rem 0.3rem;
     }
