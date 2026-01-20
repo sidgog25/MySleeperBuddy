@@ -58,14 +58,10 @@ def _lg_process_line(line: str, current_event: str) -> str | None:
         if rm.get("finish_reason") == "tool_calls":
             return "\n\n"
 
+        # Skip tool call chunks - only output the resultant data and analysis
         tool_call_chunks = message_chunk.get("tool_call_chunks") or []
         if tool_call_chunks:
-            tool_chunk = tool_call_chunks[0] or {}
-            tool_name = tool_chunk.get("name", "")
-            args = tool_chunk.get("args", "")
-            if tool_name:
-                return f"\n\n< TOOL CALL: {tool_name} >\n\n" + (args or "")
-            return args or ""
+            return None
 
         return message_chunk.get("content", "")
     return None
@@ -229,6 +225,16 @@ st.markdown("""
         color: var(--sleeper-text);
         border-radius: 8px;
         padding: 0.1rem 0.3rem;
+    }
+
+    /* Chat input textbox - white background with black text */
+    div[data-testid="stChatInput"] textarea {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+    }
+    div[data-testid="stChatInput"] > div {
+        background-color: #ffffff !important;
+        border: 1px solid var(--sleeper-border) !important;
     }
     </style>
 """, unsafe_allow_html=True)
