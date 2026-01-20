@@ -217,11 +217,11 @@ st.markdown("""
         border-radius: 14px;
         padding: 0.25rem 0.25rem;
     }
-    div[data-testid="stChatMessage"] a { color: var(--sleeper-text) !important; }
+    div[data-testid="stChatMessage"] a { color: var(--sleeper-accent) !important; }
     div[data-testid="stChatMessage"] code {
-        background: rgba(24, 35, 58, 0.9);
+        background: var(--sleeper-text);
         border: 1px solid var(--sleeper-border);
-        color: var(--sleeper-accent);
+        color: var(sleeper-bg);
         border-radius: 8px;
         padding: 0.1rem 0.3rem;
     }
