@@ -5,7 +5,7 @@ import requests
 from dotenv import load_dotenv
 from supabase import create_client, Client
 from supabase.lib.client_options import ClientOptions
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 import time
 
 load_dotenv()
@@ -64,6 +64,7 @@ def main(username: str = None, league_id: str = None) -> None:
     get_trending_players(url=url)
     get_player_statistics(url=url)
     get_matchups(url=url, league_id=league_id)
+    get_weekly_player_statistics(url=url, league_id=league_id)
 
 
 def get_players(url:str):
@@ -118,7 +119,16 @@ def get_player_statistics(url: str):
     resp.raise_for_status()
     payload = resp.json()
     rows = transform_player_statistics(payload)
-    upsert_rows(rows, "player_statistics")
+    upsert_rows(rows, "aggregated_player_statistics")
+
+def get_weekly_player_statistics(url: str, league_id: str):
+    league_state = requests.get(url=url + "state/nba").json()
+    current_week = league_state.get("week")
+    season = league_state.get("season")
+    resp = requests.get(url=url + f"stats/nba/regular/2025/{current_week}")
+    payload = resp.json()
+    rows = transform_weekly_player_statistics(payload, league_id, season, current_week)
+    upsert_rows(rows, "weekly_player_statistics")
 
 def get_matchups(url: str, league_id:str):
     week = 13
@@ -452,6 +462,107 @@ def transform_player_statistics(raw: Dict[str, Dict[str, Any]]) -> List[Dict[str
 
     return rows
 
+def transform_weekly_player_statistics(raw: Dict[str, Dict[str, Any]],league_id: str,season: str,week: int) -> List[Dict[str, Any]]:
+    """
+    raw: dict keyed by player_id with per-player weekly stats.
+         Example entry (keys vary by player):
+         {
+           "2125": {
+             "reb": 5.0,
+             "plus_minus": 20.0,
+             "q4_pts": 2.0,
+             "h1_reb": 3.0,
+             "h2_pts": 7.0,
+             "tpa": 4.0,
+             "pts": 19.0,
+             "pts_reb_ast": 27.0,
+             "pts_std_dfs": 30.4,
+             ...
+           },
+           ...
+         }
+    league_id: string league identifier.
+    season: string season, e.g. "2024".
+    week: integer week.
+    """
+    rows: List[Dict[str, Any]] = []
+
+    for player_id, stats in raw.items():
+        # Helper to read a stat safely and default to None (NULL in Postgres)
+        def s(key: str) -> Optional[Any]:
+            return stats.get(key) if stats is not None else None
+
+        row: Dict[str, Any] = {
+            "league_id": league_id,
+            "season": season,
+            "week": week,
+            "player_id": player_id,
+
+            # Explicit per-stat features – make sure these match your table columns
+            "reb": s("reb"),
+            "plus_minus": s("plus_minus"),
+            "bonus_pt_50p": s("bonus_pt_50p"),
+            "pos_rank_std": s("pos_rank_std"),
+            "gp": s("gp"),
+            "blk_stl": s("blk_stl"),
+            "fga": s("fga"),
+            "oreb": s("oreb"),
+            "fgmi": s("fgmi"),
+            "pts": s("pts"),
+            "rank_std": s("rank_std"),
+            "tpa": s("tpa"),
+            "dreb": s("dreb"),
+            "fgm": s("fgm"),
+            "pts_std": s("pts_std"),
+            "bonus_ast_15p": s("bonus_ast_15p"),
+            "pts_reb": s("pts_reb"),
+            "ff": s("ff"),
+            "tf": s("tf"),
+            "dd": s("dd"),
+            "ftmi": s("ftmi"),
+            "stl": s("stl"),
+            "reb_ast": s("reb_ast"),
+            "fta": s("fta"),
+            "turnovers": s("to"),  # JSON key "to" -> DB column "turnovers"
+            "gs": s("gs"),
+            "ast": s("ast"),
+            "blk": s("blk"),
+            "pf": s("pf"),
+            "sp": s("sp"),
+            "tpm": s("tpm"),
+            "bonus_pt_40p": s("bonus_pt_40p"),
+            "bonus_reb_20p": s("bonus_reb_20p"),
+            "pts_reb_ast": s("pts_reb_ast"),
+            "td": s("td"),
+            "pts_std_dfs": s("pts_std_dfs"),
+            "tpmi": s("tpmi"),
+            "pts_ast": s("pts_ast"),
+            "ftm": s("ftm"),
+
+            # Quarter/half split stats from weekly JSON sample
+            "q1_pts": s("q1_pts"),
+            "q2_pts": s("q2_pts"),
+            "q3_pts": s("q3_pts"),
+            "q4_pts": s("q4_pts"),
+            "q1_reb": s("q1_reb"),
+            "q2_reb": s("q2_reb"),
+            "q3_reb": s("q3_reb"),
+            "q4_reb": s("q4_reb"),
+            "q1_ast": s("q1_ast"),
+            "q2_ast": s("q2_ast"),
+            "q3_ast": s("q3_ast"),
+            "q4_ast": s("q4_ast"),
+            "h1_pts": s("h1_pts"),
+            "h2_pts": s("h2_pts"),
+            "h1_reb": s("h1_reb"),
+            "h2_reb": s("h2_reb"),
+            "h1_ast": s("h1_ast"),
+            "h2_ast": s("h2_ast"),
+        }
+
+        rows.append(row)
+
+    return rows
 
 def transform_matchups(raw: List[Dict[str, Any]], league_id: str) -> List[Dict[str, Any]]:
     """
