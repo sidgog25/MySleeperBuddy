@@ -166,18 +166,48 @@ st.markdown("""
     /* Inputs / forms */
     div[data-baseweb="input"] > div,
     div[data-baseweb="textarea"] > div {
-        background-color: var(--sleeper-surface) !important;
+        background-color: var(--sleeper-text) !important;
         border: 1px solid var(--sleeper-border) !important;
-        color: var(--sleeper-text) !important;
+        color: var(--sleeper-bg) !important;
     }
     input, textarea {
-        color: var(--sleeper-accent) !important;
-        caret-color: var(--sleeper-text) !important;
+        color: var(--sleeper-bg) !important;
+        caret-color: var(--sleeper-bg) !important;
+        background-color: var(--sleeper-text) !important;
     }
     label, .stMarkdown, .stTextInput label, .stTextArea label {
         color: var(--sleeper-muted) !important;
     }
-
+    
+    section[data-testid="stChatInput"] > div {
+        background: var(--sleeper-bg) !important;
+        padding: 1rem !important;
+        border-radius: 16px !important;
+        margin: 1rem 0 !important;
+    }
+    div:has([data-testid="stChatInput"]) {
+        background: var(--sleeper-bg) !important;
+        padding: 1.5rem !important;
+    }
+    
+    .stApp [data-testid="stChatInput"] {
+        background: radial-gradient(1200px 800px at 20% 0%, rgba(24, 231, 124, 0.10) 0%, rgba(11, 18, 32, 1) 55%) !important;
+        padding: 2rem !important;
+        border-radius: 20px !important;
+    }
+    
+    div[data-testid="stChatInput"] div[data-baseweb="input"] > div {
+        background-color: var(--sleeper-text) !important;  /* white-ish */
+        border: 1px solid var(--sleeper-bg) !important;    /* navy border */
+    }
+    
+    /* Text in the input */
+    div[data-testid="stChatInput"] input {
+        background-color: transparent !important;
+        color: var(--sleeper-bg) !important;               /* dark text */
+        caret-color: var(--sleeper-bg) !important;
+    }
+    
     /* Primary buttons */
     .stButton > button[kind="primary"] {
         background: linear-gradient(90deg, var(--sleeper-accent), var(--sleeper-accent-2)) !important;
@@ -217,10 +247,10 @@ st.markdown("""
         border-radius: 14px;
         padding: 0.25rem 0.25rem;
     }
-    div[data-testid="stChatMessage"] a { color: var(--sleeper-accent) !important; }
+    div[data-testid="stChatMessage"] a { color: var(--sleeper-bg) !important; }
     div[data-testid="stChatMessage"] code {
         background: var(--sleeper-text);
-        border: 1px solid var(--sleeper-border);
+        border: 1px solid var(--sleeper-bg);
         color: var(sleeper-bg);
         border-radius: 8px;
         padding: 0.1rem 0.3rem;
@@ -299,7 +329,7 @@ if not st.session_state.data_loaded:
                         st.session_state.data_loaded = True
                         
                         # Add welcome message
-                        welcome_msg = f"Welcome! Your Sleeper data has been loaded. How can I help you today?"
+                        welcome_msg = f"Welcome {username}! Your Sleeper data has been loaded. How can I help you today?"
                         st.session_state.messages.append({
                             "role": "assistant",
                             "content": welcome_msg
