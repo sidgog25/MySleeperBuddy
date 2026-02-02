@@ -185,7 +185,7 @@ pos_rank_std: numeric
 gp: numeric
 blk_stl: numeric
 fga: numeric
-oreb: numeric
+oreb: numeric 
 fgmi: numeric
 pts: numeric
 rank_std: numeric
@@ -231,7 +231,7 @@ player_id: text (not null, Primary key with league_id, season, week)
 reb: numeric
 plus_minus: numeric
 bonus_pt_50p: numeric
-blk_stl: numeric
+blk_stl: numeric   -- removed gp
 fga: numeric
 oreb: numeric
 fgmi: numeric
