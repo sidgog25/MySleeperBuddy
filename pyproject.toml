@@ -8,7 +8,6 @@ dependencies = [
     "langchain-core>=0.3.55",
     "langchain-openai>=0.3.14",
     "langgraph>=0.2.76",
-    "langgraph-api>=0.2.18",
     "httpx>=0.27.0",
     "pandas>=2.2.3",
     "plotly>=6.0.1",
