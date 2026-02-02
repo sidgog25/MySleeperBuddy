@@ -502,11 +502,9 @@ def transform_weekly_player_statistics(raw: Dict[str, Dict[str, Any]],league_id:
             "reb": s("reb"),
             "plus_minus": s("plus_minus"),
             "bonus_pt_50p": s("bonus_pt_50p"),
-            "pos_rank_std": s("pos_rank_std"),
-            "gp": s("gp"),
             "blk_stl": s("blk_stl"),
             "fga": s("fga"),
-            "oreb": s("oreb"),  #removed g
+            "oreb": s("oreb"),
             "fgmi": s("fgmi"),
             "pts": s("pts"),
             "rank_std": s("rank_std"),
