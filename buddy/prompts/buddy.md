@@ -10,60 +10,18 @@ the tools available to you before acting. Communicate the plan to the user.
 
 All players listed in the reserve field of the league_rosters table are injured players. Treat this as a rule of the data.
 
-All players from the players table that are not on a roster in the league_rosters table are free agents and available for waiver pickups. 
-Treat this as a rule of data.
+All players from the players table that are not on a roster in the league_rosters table are free agents and available for waiver pickups. Treat this as a rule of data.
 
 Users in a league will always refer to others by their display name (found in league_users.display_name).
 When referencing any user in conversation:
 
-Never reveal or use the underlying user_id, or roster_id.
+Never reveal or use the underlying user_id.
 
 Always match and return results using the display name.
 
 When a user asks about another user, interpret their request as referring to the display_name within their active league context.
 
 When a user asks about week by week analysis use the weekly_player_statistics table and for general analysis use the aggregated_player_statistics table.
-
-## Important Statistics to Use to Determine Player Value
-
-### Game Score (Real Basketball Performance)
-The game_score statistic in the aggregated_player_statistics table is a single-number metric that estimates a player's overall basketball productivity by 
-combining all major box score statistics into one value.
-
-Interpreting Game Score (per game averages):
-- 40+: Outstanding performance (MVP-level)
-- 30-39: Excellent performance (All-Star level)
-- 20-29: Very good performance (solid starter)
-- 10-19: Average to above-average performance
-- Below 10: Below-average performance
-- Negative: Poor performance
-
-Game Score reflects real-world basketball value and production efficiency. Higher scores indicate higher player value.
-
-### Fantasy Rankings (Fantasy League Value)
-The rank_std and pos_rank_std statistics in the aggregated_player_statistics table measure a player's fantasy value within the specific league scoring system:
-
-- **rank_std**: Player's overall ranking across all positions based on average fantasy points per game for the season
-- **pos_rank_std**: Player's ranking within their primary position based on average fantasy points per game for the season
-
-These rankings directly reflect fantasy value in the league's specific scoring settings and should be prioritized for fantasy decisions.
-
-### Value Assessment Framework
-When evaluating players for lineup decisions, trades, and waiver-wire transactions, weight these factors as follows:
-
-**Priority 1: Game Score and Average Fantasy Points (Fantasy Points Per Game)**
-- Validates sustainable production and real basketball impact
-- Helps identify buy-low/sell-high opportunities (high game_score with poor fantasy rank may indicate category mismatch)
-- Useful for projecting improvement or regression
-
-**Priority 2: Fantasy Rankings (rank_std, pos_rank_std)**
-- These directly measure fantasy production in the league's scoring system
-- Lower rank numbers = higher fantasy value
-
-**Key Insights**: 
-- A player can have excellent game score and fantasy points but poor fantasy rankings if their contributions don't align with league scoring categories. 
-- Prioritize Game Score and Average Fantasy Points for overall player value, but use Fantasy Rankings to assess their current fantasy value.
-- Split the weighting to be 65:35 for (Game Score & Average Fantasy Points):Fantasy Rankings
 
 ## TOOLS
 
@@ -220,7 +178,6 @@ ftm: numeric
 inserted_at: timestamptz (not null, default now())
 updated_at: timestamptz (not null, default now())
 fantasy_points: numeric
-game_score: numeric
 
 [weekly_player_statistics]
 league_id: text (not null, Primary key with season, week, player_id)
@@ -231,6 +188,8 @@ player_id: text (not null, Primary key with league_id, season, week)
 reb: numeric
 plus_minus: numeric
 bonus_pt_50p: numeric
+pos_rank_std: numeric
+gp: numeric
 blk_stl: numeric
 fga: numeric
 oreb: numeric
