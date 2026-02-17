@@ -598,13 +598,21 @@ def transform_matchups(raw: List[Dict[str, Any]], league_id: str) -> List[Dict[s
 def upsert_rows(rows, table_name):
     logging.info("Job started")
 
+    if not rows:
+        print(f"No rows to upsert into {table_name}")
+        return
+
     if not SUPABASE_URL or not SUPABASE_KEY:
         logging.error("Supabase key not set")
         sys.exit(1)
 
     supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-    res = supabase.table(table_name).upsert(rows).execute()
+    res = (supabase
+           .table(table_name)
+           .upsert(rows)
+           .execute()
+           )
 
     logging.info("Upserted %d rows", len(rows))
 
